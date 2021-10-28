@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
                 //room 페이지 허용
                 .antMatchers("/room/**").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated() // anyRequest: 어떤 요청이 오든지 로그인 과정이 없으면 로그인
                 .and()
                 .formLogin()

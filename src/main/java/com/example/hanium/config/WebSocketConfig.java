@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
     @Override
     public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-        stompEndpointRegistry.addEndpoint("/websocket")    //클라이언트가 접속할 웹소켓 주소
+        stompEndpointRegistry.addEndpoint("/ws")    //클라이언트가 접속할 웹소켓 주소
                 .setAllowedOrigins("*")
                 .withSockJS();
     }

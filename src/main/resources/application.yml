@@ -1,0 +1,41 @@
+spring:
+  redis:
+    password: '3772'
+    host: 172.31.10.20
+    port: '6379'
+
+  mail:
+    host: smtp.gmail.com
+    username: alphacity160@gmail.com
+    protocol: smtp
+    port: '465'
+    properties:
+      mail:
+        stmp:
+          trust: smtp.gmail.com
+        smtp:
+          ssl:
+            enable: 'true'
+          auth: 'true'
+    password: 103711917Aa!
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: flase
+        format_sql: true
+
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/artrium
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      settings:
+        web-allow-others: 'true'
+      enabled: 'true'

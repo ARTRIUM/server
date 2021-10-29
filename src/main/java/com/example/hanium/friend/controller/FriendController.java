@@ -27,15 +27,16 @@ public class FriendController {
 
 
     //친구 추가
-    @PostMapping("/api/friend")
-    public String addFriend(@RequestBody EmailDto emailDto, HttpServletRequest req){
+    @PostMapping("/friend")
+    public String addFriend(@RequestBody String email, HttpServletRequest req){
         Long myId = (Long) req.getSession().getAttribute("userId");
-        return friendService.addFriend(myId, emailDto.getEmail());
+        return friendService.addFriend(myId, email);
     }
 
     // 친구 리스트
-    @GetMapping("/api/friends")
-    public List<FriendDto> allFriends(@PathVariable Long myId){
+    @GetMapping("/friends")
+    public List<FriendDto> allFriends(HttpServletRequest req){
+        Long myId = (Long) req.getSession().getAttribute("userId");
         User user = userRepository.findById(myId).orElseThrow(
                 ()->new NullPointerException("접근 오류")
         );
@@ -45,7 +46,7 @@ public class FriendController {
     }
 
     //친구 삭제
-    @GetMapping("/api/friend/{myId}/{friendId}")
+    @GetMapping("/friend/{myId}/{friendId}")
     public String deleteFriend(@PathVariable Long myId, @PathVariable Long friendId){
         return friendService.deleteFriend(myId,friendId);
     }

@@ -10,6 +10,7 @@ import com.example.hanium.Auth.repository.UserRepository;
 import com.example.hanium.Auth.service.UserService;
 import com.example.hanium.utils.ApiUtils.ApiResult;
 import javassist.NotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,13 +38,14 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ApiResult<LoginSuccessDto> loginUser(@RequestBody SignInRequestDto requestDto) {
+    public ApiResult<LoginSuccessDto> loginUser(@RequestBody SignInRequestDto requestDto, HttpServletRequest servletRequest ) {
         User user = userService.loginUser(requestDto);
 
         LoginSuccessDto lsd = new LoginSuccessDto(user.getUserId(), user.getUsername(), user.getLanguage());
         if (user == null) {
             return null;
         }
+        servletRequest.getSession().setAttribute("userId", user.getUserId());
 
         return success(lsd);
     }

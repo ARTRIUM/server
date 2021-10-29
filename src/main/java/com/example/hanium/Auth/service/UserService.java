@@ -5,6 +5,7 @@ import com.example.hanium.Auth.dto.SignupRequestDto;
 import com.example.hanium.Auth.model.User;
 import com.example.hanium.Auth.model.UserLanguage;
 import com.example.hanium.Auth.repository.UserRepository;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,10 @@ public class UserService {
         }
 
         return user;
+    }
+
+
+    public Long getUserId(HttpSession session){
+        return (Long) session.getAttribute("userId");
     }
 }

@@ -20,7 +20,7 @@ public class User extends Timestamped {
 
 
     // ID 자동 생성 및 증가
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Id
     @Column(name = "user_id")
     private Long userId;

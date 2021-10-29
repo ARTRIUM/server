@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Chat {
 
     // ID 자동 생성 및 증가
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Id
     @Column(name = "chat_id")
     private Long chatID;

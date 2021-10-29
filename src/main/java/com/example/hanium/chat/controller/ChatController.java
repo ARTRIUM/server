@@ -6,6 +6,7 @@ import com.example.hanium.chat.dto.ChatDto;
 import com.example.hanium.chat.model.Chat;
 import com.example.hanium.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,6 +14,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ChatController {
@@ -22,12 +24,14 @@ public class ChatController {
 
     @MessageMapping("/chat/{userId}/{roomId}")
     @SendTo("/sub/chat/room/{roomId}")
-    public ChatDto join(@DestinationVariable("userId") Long userId, @DestinationVariable("roomId") Long roomId, @Payload String content) throws Exception{
-        User user = userRepository.findByUserId(userId);
-        Chat chat = chatService.createChat(userId, roomId, content);
-        chatService.chatSave(chat);
+    public void join(@DestinationVariable("userId") Long userId, @DestinationVariable("roomId") Long roomId, @Payload String content) throws Exception{
+//        User user = userRepository.findByUserId(userId);
+//        Chat chat = chatService.createChat(userId, roomId, content);
+//        chatService.chatSave(chat);
 
-        return new ChatDto(chat);
+        log.info("받은 메세지 : {}",content);
+
+//        return new ChatDto(chat);
 
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 public class Room {
 
     // ID 자동 생성 및 증가
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Id
     @Column(name = "room_id")
     private Long roomId;

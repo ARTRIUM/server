@@ -14,8 +14,8 @@ import javax.persistence.*;
 @Entity
 public class RoomMember {
 
-    // ID 자동 생성 및 증가
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @GeneratedValue
     @Id
     @Column(name = "roomMember_id")
     private Long roomMemberId;

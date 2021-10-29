@@ -2,6 +2,7 @@ package com.example.hanium.roomMember.controller;
 
 import com.example.hanium.friend.dto.EmailDto;
 import com.example.hanium.room.model.Room;
+import com.example.hanium.roomMember.dto.InviteDto;
 import com.example.hanium.roomMember.service.RoomMemberService;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +25,18 @@ public class RoomMemberController {
     }
 
     // 친구 초대
-    @GetMapping("/room/invite/{fromId}/{toId}/{roomId}")
-    public boolean inviteRoom(@PathVariable("fromId") Long fromId, @PathVariable("toId") Long toId, @PathVariable("roomId") Long roomId) {
-        return roomMemberService.inviteRoom(fromId, toId, roomId);
+    @PostMapping("/room/invite")
+    public ApiResult<String> inviteRoom(@RequestBody InviteDto inviteDto) {
+        roomMemberService.inviteRoom(inviteDto);
+
+        return success("성공적으로 초대하였습니다.");
     }
 
-    // 이메일로 미팅 상대 초대
-    @PostMapping("/room/invite/{roomId}")
-    public boolean inviteRoom(@PathVariable Long roomId, @RequestBody EmailDto emailDto){
-        return roomMemberService.inviteRoomByEmail(roomId,emailDto.getEmail());
-    }
+//    // 이메일로 미팅 상대 초대
+//    @PostMapping("/room/invite/{roomId}")
+//    public boolean inviteRoom(@PathVariable Long roomId, @RequestBody EmailDto emailDto){
+//        return roomMemberService.inviteRoomByEmail(roomId,emailDto.getEmail());
+//    }
 
 
     // userID의 특정 미팅룸 삭제

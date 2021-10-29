@@ -59,4 +59,22 @@ public class FriendService {
         }
         return "친구 삭제 오류";
     }
+
+
+    @Transactional
+    public boolean isFriend(long fromId,long toId){
+        User from = userRepository.findByUserId(fromId);
+
+        if(fromId==toId) return false;
+
+        Optional<Friend> first = from.getFriends().stream()
+            .filter(a -> a.getFriend().getUserId() == toId)
+            .findFirst();
+
+        if(first.isPresent()){
+            return true;
+        }
+
+        return false;
+    }
 }

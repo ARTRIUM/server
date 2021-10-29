@@ -5,9 +5,13 @@ import com.example.hanium.Auth.repository.UserRepository;
 import com.example.hanium.friend.model.Friend;
 import com.example.hanium.friend.repository.FriendRepository;
 import com.example.hanium.room.model.Room;
+import com.example.hanium.roomMember.dto.InviteDto;
 import com.example.hanium.roomMember.model.RoomMember;
 import com.example.hanium.roomMember.repository.RoomMemberRepository;
 import com.example.hanium.room.repository.RoomRepository;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,48 +44,45 @@ public class RoomMemberService {
     }
 
     /* --------------------------------------------------------
-    fromId(초대하는사람) 친구 대상에서 toId(초대받는사람) 존재 여부 확인
-    -> 존재 할 경우 join room 실행하도록 코드 변경
+       초대하는사람이 이미 방에 있으면 초대가 다시 안되도록 수정하였음
+       ( 초대하는사람과 초대받는사람의 친구여부는 클라이언트에서 친구목록만 뜨게하여 초대하기 때문에 지웠음 )
      ------------------------- */
 
     //친구 초대
 
     @Transactional
-    public boolean inviteRoom(Long fromId, Long toId, Long roomId) {
-        User from = userRepository.findByUserId(fromId);
-        Room room = roomRepository.findByRoomId(roomId);
+    public void inviteRoom(InviteDto inviteDto) {
 
-        // 친구 대상에 toId 존재 하면
-        Optional<Friend> first = from.getFriends().stream()
-                .filter(a -> a.getFriend().getUserId() == toId)
-                .findFirst();
+        List<Long> friendList = inviteDto.getFriendIdList();
+        Room room = roomRepository.findByRoomId(inviteDto.getRoomId());
 
-        // Join room
-        if (first.isPresent()) {
-            Friend friend = first.get();
-            Friend to = friendRepository.findById(friend.getId()).orElseThrow(
-                    () -> new NullPointerException("접근 오류")
-            );
-            User to_ = to.getFriend();
-            joinRoom(to_, room);
-            return true;
+        List<Long> userIdListInRoom = room.getRoomMembers().stream()
+            .map(o->o.getUser().getUserId())
+            .collect(Collectors.toList());
+
+
+        List<Long> inviteList = friendList.stream().filter(o -> !userIdListInRoom.contains(o))
+            .collect(Collectors.toList());
+
+        for(Long inviteUserId : inviteList) {
+            User user = userRepository.findByUserId(inviteUserId);
+            joinRoom(user,room);
         }
 
-        return false;
     }
 
-    // 이메일로 친구 초대
-    @Transactional
-    public boolean inviteRoomByEmail(Long roomId, String friendEmail) {
-        User friend = userRepository.findByEmail(friendEmail);
-        Room room = roomRepository.findByRoomId(roomId);
-
-        if(friend != null){
-            joinRoom(friend,room);
-            return true;
-        }
-        return false;
-    }
+//    // 이메일로 친구 초대
+//    @Transactional
+//    public boolean inviteRoomByEmail(Long roomId, String friendEmail) {
+//        User friend = userRepository.findByEmail(friendEmail);
+//        Room room = roomRepository.findByRoomId(roomId);
+//
+//        if(friend != null){
+//            joinRoom(friend,room);
+//            return true;
+//        }
+//        return false;
+//    }
 
     // userID의 특정 미팅룸 삭제
     public Room deleteRoom(Long userId, Long roomId) {
@@ -93,7 +94,6 @@ public class RoomMemberService {
         return room;
     }
 
-    // 나를 미팅룸에 추가
     public void joinRoom(User user, Room room) {
         RoomMember roomMember = new RoomMember(user, room);
         roomMemberRepository.save(roomMember);

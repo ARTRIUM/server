@@ -7,7 +7,9 @@ import com.example.hanium.friend.dto.EmailDto;
 import com.example.hanium.friend.dto.FriendDto;
 import com.example.hanium.friend.service.FriendService;
 import com.example.hanium.utils.ApiUtils.ApiResult;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,13 +27,14 @@ public class FriendController {
 
 
     //친구 추가
-    @PostMapping("/api/friend/{myId}")
-    public String addFriend(@PathVariable Long myId, @RequestBody EmailDto emailDto){
+    @PostMapping("/api/friend")
+    public String addFriend(@RequestBody EmailDto emailDto, HttpServletRequest req){
+        Long myId = (Long) req.getSession().getAttribute("userId");
         return friendService.addFriend(myId, emailDto.getEmail());
     }
 
     // 친구 리스트
-    @GetMapping("/api/friends/{myId}")
+    @GetMapping("/api/friends")
     public List<FriendDto> allFriends(@PathVariable Long myId){
         User user = userRepository.findById(myId).orElseThrow(
                 ()->new NullPointerException("접근 오류")

@@ -1,10 +1,11 @@
 package com.example.hanium.roomMember.controller;
 
-import com.example.hanium.friend.dto.EmailDto;
+import com.example.hanium.Auth.service.UserService;
 import com.example.hanium.room.model.Room;
+import com.example.hanium.roomMember.dto.CreateRoomDto;
 import com.example.hanium.roomMember.dto.InviteDto;
 import com.example.hanium.roomMember.service.RoomMemberService;
-import javassist.NotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.example.hanium.utils.ApiUtils.ApiResult;
@@ -16,18 +17,23 @@ import static com.example.hanium.utils.ApiUtils.success;
 public class RoomMemberController {
 
     final private RoomMemberService roomMemberService;
+    final private UserService userService;
 
-    // 미팅 시작 버튼 -> 미팅룸 생성
-    @PostMapping("/room/create/{userId}")
-    public ApiResult<String> createRoom(@PathVariable("userId") Long userId) {
-        roomMemberService.createRoom(userId);
+
+    // 미팅 시작 버튼 -> 친구선택 -> 미팅룸 생성
+    @PostMapping("/room/create")
+    public ApiResult<String> createRoom(@RequestBody CreateRoomDto createRoomDto, HttpServletRequest req) {
+        Long userId =userService.getUserId(req.getSession());
+        Long roomId = roomMemberService.createRoom(createRoomDto.getRoomName(),userId);
+        roomMemberService.inviteRoom(createRoomDto.getFriendIdList(),roomId);
+
         return success("성공적으로 방을 생성했습니다.");
     }
 
-    // 친구 초대
+    // 방에서 친구 추가 초대
     @PostMapping("/room/invite")
     public ApiResult<String> inviteRoom(@RequestBody InviteDto inviteDto) {
-        roomMemberService.inviteRoom(inviteDto);
+        roomMemberService.inviteRoom(inviteDto.getFriendIdList(),inviteDto.getRoomId());
 
         return success("성공적으로 초대하였습니다.");
     }

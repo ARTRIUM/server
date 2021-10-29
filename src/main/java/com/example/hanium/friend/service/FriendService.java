@@ -2,8 +2,11 @@ package com.example.hanium.friend.service;
 
 import com.example.hanium.Auth.model.User;
 import com.example.hanium.Auth.repository.UserRepository;
+import com.example.hanium.friend.dto.FriendDto;
 import com.example.hanium.friend.model.Friend;
 import com.example.hanium.friend.repository.FriendRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +21,7 @@ public class FriendService {
 
     //친구 추가
     @Transactional
-    public String addFriend(long myId, String friendEmail) {
+    public String addFriend(Long myId, String friendEmail) {
         User me = userRepository.findById(myId).orElseThrow(
                 () -> new NullPointerException("접근 오류")
         );
@@ -62,19 +65,12 @@ public class FriendService {
 
 
     @Transactional
-    public boolean isFriend(long fromId,long toId){
-        User from = userRepository.findByUserId(fromId);
+    public List<FriendDto> getAllFriend(Long userId){
+        List<Friend> friendList = friendRepository.findAllByUserId(userId)
+            .orElseThrow(() -> new NullPointerException("친구가 존재하지 않습니다"));
 
-        if(fromId==toId) return false;
-
-        Optional<Friend> first = from.getFriends().stream()
-            .filter(a -> a.getFriend().getUserId() == toId)
-            .findFirst();
-
-        if(first.isPresent()){
-            return true;
-        }
-
-        return false;
+        return friendList.stream()
+            .map(o->new FriendDto(o))
+            .collect(Collectors.toList());
     }
 }

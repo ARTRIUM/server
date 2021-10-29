@@ -30,11 +30,11 @@ public class RoomMemberService {
 
     // 미팅 시작 버튼
     @Transactional
-    public Long createRoom(Long userId) {
+    public Long createRoom(String roomName,Long userId) {
         User user = userRepository.findByUserId(userId);
 
         // 새로운 미팅룸 생성 및 저장
-        Room room = new Room(user.getUsername());
+        Room room = new Room(roomName);
         roomRepository.save(room);
 
         // 미팅룸 생성자를 미팅룸에 추가
@@ -51,10 +51,9 @@ public class RoomMemberService {
     //친구 초대
 
     @Transactional
-    public void inviteRoom(InviteDto inviteDto) {
+    public void inviteRoom(List<Long> friendList,Long roomId) {
 
-        List<Long> friendList = inviteDto.getFriendIdList();
-        Room room = roomRepository.findByRoomId(inviteDto.getRoomId());
+        Room room = roomRepository.findByRoomId(roomId);
 
         List<Long> userIdListInRoom = room.getRoomMembers().stream()
             .map(o->o.getUser().getUserId())

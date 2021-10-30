@@ -1,22 +1,17 @@
 package com.example.hanium.friend.controller;
 
+import com.example.hanium.Auth.dto.AddFriendSuccessDto;
 import com.example.hanium.Auth.model.User;
 import com.example.hanium.Auth.repository.UserRepository;
-import com.example.hanium.Auth.service.UserService;
 import com.example.hanium.friend.dto.EmailDto;
 import com.example.hanium.friend.dto.FriendDto;
 import com.example.hanium.friend.service.FriendService;
-import com.example.hanium.utils.ApiUtils.ApiResult;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.example.hanium.utils.ApiUtils.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +23,7 @@ public class FriendController {
 
     //친구 추가
     @PostMapping("/friend")
-    public String addFriend(@RequestBody EmailDto email, HttpServletRequest req){
+    public AddFriendSuccessDto addFriend(@RequestBody EmailDto email, HttpServletRequest req){
         System.out.println(email.getEmail());
         Long myId = (Long) req.getSession().getAttribute("userId");
         System.out.println(myId);

@@ -28,9 +28,11 @@ public class FriendController {
 
     //친구 추가
     @PostMapping("/friend")
-    public String addFriend(@RequestBody String email, HttpServletRequest req){
+    public String addFriend(@RequestBody EmailDto email, HttpServletRequest req){
+        System.out.println(email.getEmail());
         Long myId = (Long) req.getSession().getAttribute("userId");
-        return friendService.addFriend(myId, email);
+        System.out.println(myId);
+        return friendService.addFriend(myId, email.getEmail());
     }
 
     // 친구 리스트

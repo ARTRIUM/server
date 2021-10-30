@@ -1,6 +1,7 @@
 package com.example.hanium.roomMember.controller;
 
 import com.example.hanium.Auth.service.UserService;
+import com.example.hanium.room.dto.RoomDto;
 import com.example.hanium.room.model.Room;
 import com.example.hanium.roomMember.dto.CreateRoomDto;
 import com.example.hanium.roomMember.dto.InviteDto;
@@ -22,12 +23,12 @@ public class RoomMemberController {
 
     // 미팅 시작 버튼 -> 친구선택 -> 미팅룸 생성
     @PostMapping("/room/create")
-    public ApiResult<String> createRoom(@RequestBody CreateRoomDto createRoomDto, HttpServletRequest req) {
+    public Long createRoom(@RequestBody CreateRoomDto createRoomDto, HttpServletRequest req) {
         Long userId =userService.getUserId(req.getSession());
         Long roomId = roomMemberService.createRoom(createRoomDto.getRoomName(),userId);
         roomMemberService.inviteRoom(createRoomDto.getFriendIdList(),roomId);
 
-        return success("성공적으로 방을 생성했습니다.");
+        return roomId;
     }
 
     // 방에서 친구 추가 초대
@@ -37,13 +38,6 @@ public class RoomMemberController {
 
         return success("성공적으로 초대하였습니다.");
     }
-
-//    // 이메일로 미팅 상대 초대
-//    @PostMapping("/room/invite/{roomId}")
-//    public boolean inviteRoom(@PathVariable Long roomId, @RequestBody EmailDto emailDto){
-//        return roomMemberService.inviteRoomByEmail(roomId,emailDto.getEmail());
-//    }
-
 
     // userID의 특정 미팅룸 삭제
     @DeleteMapping("/room/{userId}/{roomId}")

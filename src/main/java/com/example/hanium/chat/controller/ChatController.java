@@ -24,14 +24,15 @@ public class ChatController {
 
     @MessageMapping("/chat/{userId}/{roomId}")
     @SendTo("/sub/chat/room/{roomId}")
-    public void join(@DestinationVariable("userId") Long userId, @DestinationVariable("roomId") Long roomId, @Payload String content) throws Exception{
-//        User user = userRepository.findByUserId(userId);
-//        Chat chat = chatService.createChat(userId, roomId, content);
-//        chatService.chatSave(chat);
+    public ChatDto send(@DestinationVariable("userId") Long userId, @DestinationVariable("roomId") Long roomId, @Payload String content) throws Exception{
+
+        String ncontent=content.substring(0,content.length()-2);
+        Chat chat = chatService.createChat(userId, roomId, ncontent);
+        chatService.chatSave(chat);
 
         log.info("받은 메세지 : {}",content);
 
-//        return new ChatDto(chat);
+        return new ChatDto(chat);
 
     }
 

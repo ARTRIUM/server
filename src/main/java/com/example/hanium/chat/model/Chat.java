@@ -53,5 +53,6 @@ public class Chat {
         this.setRoom(room);
         this.message = message;
         this.language = language;
+        this.writtenAt = LocalDateTime.now();
     }
 }

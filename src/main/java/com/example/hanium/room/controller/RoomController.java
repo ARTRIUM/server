@@ -28,29 +28,27 @@ public class RoomController {
     private final RoomRepository roomRepository;
 
     // userID가 속해있는 모든 방 리턴
-    @GetMapping("/room/getrooms")
+    @GetMapping("/rooms")
     public List<RoomDto> getRooms(HttpServletRequest req){
         long fromId = (Long)req.getSession().getAttribute("userId");
         User user = userRepository.findById(fromId).orElseThrow(
                 ()->new NullPointerException("접근 오류")
         );
-        return roomService.showAllRoom(user.getUserId());
+        return roomService.showAllRoom(user);
     }
 
  // rooomId에 있는 모든 메시지 리턴
    @GetMapping("/message/all/{roomId}")
     public List<ChatDto> getMessages(@PathVariable(name="roomId")Long roomId){
-       List<ChatDto> ChatDtos = new ArrayList<>();
        Room room = roomRepository.findByRoomId(roomId);
        return room.getMessages().stream().map(ChatDto::new).collect(Collectors.toList());
    }
 
-//   //roomId로 Room 리턴
-//@GetMapping("/room/{roomId}")
-//    public RoomDto getRoom(@PathVariable(name="roomId")Long roomId){
-//        Room room = roomRepository.findByRoomId(roomId);
-//        return room;
-//}
+   //roomId로 Room 리턴
+@GetMapping("/room/{roomId}")
+    public RoomDto getRoom(@PathVariable(name="roomId")Long roomId){
+        return new RoomDto(roomRepository.findByRoomId(roomId));
+}
 
 
 }

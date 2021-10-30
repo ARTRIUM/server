@@ -6,6 +6,7 @@ import com.example.hanium.chat.model.Chat;
 import com.example.hanium.chat.repository.ChatRepository;
 import com.example.hanium.room.model.Room;
 import com.example.hanium.room.repository.RoomRepository;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,14 @@ public class ChatService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
+    @Transactional
     public Chat createChat(Long userId, Long roomId, String content) {
         User user = userRepository.findByUserId(userId);
         Room room = roomRepository.findByRoomId(roomId);
         return new Chat(user, room, content, user.getLanguage());
     }
 
+    @Transactional
     public Chat chatSave(Chat chat) {
         chatRepository.save(chat);
         return chat;

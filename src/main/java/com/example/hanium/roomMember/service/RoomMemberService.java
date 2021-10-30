@@ -26,7 +26,7 @@ public class RoomMemberService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final RoomMemberRepository roomMemberRepository;
-    private final FriendRepository friendRepository;
+
 
     // 미팅 시작 버튼
     @Transactional

@@ -22,9 +22,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     // userId가 속한 미팅룸 조회
-    public List<RoomDto> showAllRoom(Long userId){
-        User user = userRepository.findByUserId(userId);
-
+    public List<RoomDto> showAllRoom(User user){
         List<Room> rooms = user.getRoomMembers()
                 .stream().map(RoomMember::getRoom)
                 .collect(Collectors.toList());

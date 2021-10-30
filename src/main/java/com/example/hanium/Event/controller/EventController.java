@@ -12,9 +12,9 @@ import org.springframework.stereotype.Controller;
 public class EventController {
 
 
-    @MessageMapping("/event/sub/{fromId}/{toId}")
+    @MessageMapping("/event/sub/{toId}")
     @SendTo("/sub/{toId}")
-    public EventSubDto greeting(@DestinationVariable("fromId") Long fromId,@DestinationVariable("toId") Long toId,@Payload EventSubDto event) throws Exception {
+    public EventSubDto greeting(@DestinationVariable("toId") Long toId,@Payload EventSubDto event) throws Exception {
         Thread.sleep(100); // delay
         return event;
     }
